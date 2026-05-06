@@ -1,12 +1,14 @@
+<audio id="bg-music" loop>
+  <source src="until-i-found-you.mp3" type="audio/mpeg">
+</audio>
+
 <script>
   const heartsContainer = document.getElementById("hearts");
 
   function criarCoracao() {
     const heart = document.createElement("div");
-
     heart.classList.add("heart");
     heart.innerHTML = "♥";
-
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.fontSize = Math.random() * 18 + 12 + "px";
     heart.style.animationDuration = Math.random() * 5 + 5 + "s";
@@ -25,32 +27,33 @@
     const message = document.getElementById("message");
     const music = document.getElementById("bg-music");
 
-    message.style.display = "block";
+    if (message) {
+      message.style.display = "block";
+      message.scrollIntoView({ behavior: "smooth" });
+    }
 
-    message.scrollIntoView({
-      behavior: "smooth"
-    });
-
-    music.play().catch(() => {
-      console.log("Autoplay bloqueado");
-    });
+    if (music) {
+      music.play().catch(() => {
+        console.log("Música bloqueada pelo navegador");
+      });
+    }
   }
 
-  // CONTADOR
+  const inicio = new Date(2025, 4, 7);
 
-  const inicio = new Date(2025, 4, 7); // mês começa em 0
+  function atualizarContador() {
+    const campoDias = document.getElementById("dias");
 
-  const hoje = new Date();
+    if (!campoDias) return;
 
-  const diferenca = hoje - inicio;
+    const hoje = new Date();
+    const diferenca = hoje - inicio;
+    const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
 
-  const dias = Math.floor(
-    diferenca / (1000 * 60 * 60 * 24)
-  );
+    campoDias.innerText = dias;
+  }
 
-  document.getElementById("dias").innerText = dias;
-
-  // REVEAL AO SCROLL
+  atualizarContador();
 
   const reveals = document.querySelectorAll(".reveal");
 
@@ -65,6 +68,5 @@
   }
 
   window.addEventListener("scroll", revelarMensagens);
-
   revelarMensagens();
 </script>

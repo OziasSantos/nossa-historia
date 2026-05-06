@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nossa História</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to bottom, #05060f, #0d1020 45%, #170b15);
+      color: #fff;
+      overflow-x: hidden;
+      padding: 24px;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(white 1px, transparent 1px),
+        radial-gradient(rgba(255,255,255,0.7) 1px, transparent 1px);
+      background-size: 80px 80px, 140px 140px;
+      background-position: 0 0, 40px 40px;
+      opacity: 0.18;
+      z-index: 0;
+      animation: estrelas 20s linear infinite;
+    }
+
+    @keyframes estrelas {
+      from {
+        transform: translateY(0px);
+      }
+      to {
+        transform: translateY(-80px);
+      }
+    }
+
+    .hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .heart {
+      position: absolute;
+      bottom: -40px;
+      color: rgba(255, 120, 170, 0.45);
+      animation: subir linear infinite;
+      font-size: 18px;
+    }
+
+    @keyframes subir {
+      from {
+        transform: translateY(0) rotate(0deg);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-110vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 34px;
+      padding: 48px 34px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.45);
+      text-align: center;
+      animation: aparecer 1s ease forwards;
+    }
+
+    @keyframes aparecer {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffd6e7;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 7vw, 4.6rem);
+      line-height: 1;
+      margin-bottom: 18px;
+      background: linear-gradient(90deg, #fff, #ffc3d9, #ff78ad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      color: #f3dbe5;
+      max-width: 620px;
+      margin: 0 auto 28px;
+      line-height: 1.7;
+    }
+
+    .photo-box {
+      width: 220px;
+      height: 220px;
+      margin: 12px auto 28px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.35);
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(255, 80, 140, 0.25);
+    }
+
+    .couple-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .message {
+      display: none;
+      margin-top: 26px;
+      padding: 26px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      line-height: 1.8;
+      font-size: 1.05rem;
+      animation: aparecer 0.8s ease forwards;
+    }
+
+    .message strong {
+      color: #ffc3d9;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      padding: 15px 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff4f93, #ff8ab8);
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      box-shadow: 0 12px 30px rgba(255, 79, 147, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 36px rgba(255, 79, 147, 0.45);
+    }
+
+    .gallery {
+      display: flex;
+      gap: 22px;
+      overflow-x: auto;
+      padding: 24px 10px;
+      margin-top: 34px;
+      scroll-snap-type: x mandatory;
+    }
+
+    .gallery::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .gallery::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 999px;
+    }
+
+    .polaroid {
+      min-width: 260px;
+      background: white;
+      color: #111;
+      padding: 14px 14px 24px;
+      border-radius: 10px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+      transform: rotate(-2deg);
+      transition: 0.4s ease;
+      scroll-snap-align: center;
+    }
+
+    .polaroid:nth-child(2) {
+      transform: rotate(2deg);
+    }
+
+    .polaroid:nth-child(3) {
+      transform: rotate(-1deg);
+    }
+
+    .polaroid:hover {
+      transform: scale(1.04) rotate(0deg);
+    }
+
+    .polaroid img {
+      width: 100%;
+      height: 340px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .polaroid p {
+      margin-top: 14px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .timeline-message {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: 0.8s ease;
+      margin-top: 80px;
+      padding: 30px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+      line-height: 1.9;
+    }
+
+    .timeline-message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .timeline-message h2 {
+      margin-bottom: 12px;
+      color: #ffd6e7;
+    }
+
+    .counter {
+      margin-top: 26px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .counter div {
+      padding: 16px 10px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .counter span {
+      display: block;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #ffc3d9;
+    }
+
+    .counter small {
+      color: #e8c8d5;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: #d7aebe;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 34px 22px;
+      }
+
+      .counter {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-box {
+        width: 160px;
+        height: 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hearts" id="hearts"></div>
+
+  <main class="card">
+    <span class="tag">Um ano de nós</span>
+    <h1>365 dias escolhendo você</h1>
+
+    <div class="photo-box">
+      <img src="foto.jpg" alt="Nós dois" class="couple-photo" />
+    </div>
+
+    <p class="subtitle">
+      Tem coisas que a gente não planeja. Elas simplesmente chegam, ficam e fazem a vida parecer mais leve.
+      Você foi uma dessas coisas.
+    </p>
+
+    <button onclick="iniciarExperiencia()">Abrir nossa história</button>
+
+    <section class="message" id="message">
+      <p>
+        Nem tudo que marca a vida acontece de forma grandiosa.
+        Às vezes começa só com um encontro, uma conversa e uma sensação estranha de conforto.
+      </p>
+      <br />
+      <p>
+        Desde <strong>07/05/25</strong>, eu fui percebendo que você não era só alguém passageiro.
+        Você virou presença. Rotina. Paz. E, sem perceber, também virou lar.
+      </p>
+      <br />
+      <p>
+        Obrigado por existir na minha vida do jeito que existe.
+      </p>
+    </section>
+
+    <section class="gallery">
+      <div class="polaroid">
+        <img src="foto1.jpg" alt="Nossa foto 1">
+        <p>Nosso jeito leve de existir juntos.</p>
+      </div>
+
+      <div class="polaroid">
+        <img src="foto2.jpg" alt="Nossa foto 2">
+        <p>Os momentos simples viraram os mais importantes.</p>
+      </div>
+
+      <div class="polaroid">
+        <img src="foto3.jpg" alt="Nossa foto 3">
+        <p>Você transformou dias comuns em memórias.</p>
+      </div>
+    </section>
+
+    <section class="timeline-message reveal">
+      <h2>07 de Maio de 2025</h2>
+      <p>
+        O começo da nossa história.
+        Talvez a gente ainda não soubesse o tamanho que aquilo iria tomar,
+        mas alguma coisa ali já fazia sentido.
+      </p>
+    </section>
+
+    <section class="timeline-message reveal">
+      <h2>Depois disso...</h2>
+      <p>
+        Vieram conversas, risadas, abraços demorados,
+        olhares silenciosos e aquela sensação de querer continuar perto.
+      </p>
+    </section>
+
+    <section class="timeline-message reveal">
+      <h2>Hoje</h2>
+      <p>
+        Hoje eu só tenho certeza de uma coisa:
+        eu escolheria viver tudo isso de novo.
+      </p>
+    </section>
+
+    <div class="counter">
+      <div>
+        <span id="dias">0</span>
+        <small>dias</small>
+      </div>
+      <div>
+        <span>12</span>
+        <small>meses</small>
+      </div>
+      <div>
+        <span>1</span>
+        <small>história</small>
+      </div>
+    </div>
+
+    <audio id="bg-music" loop>
+      <source src="until-i-found-you.mp3" type="audio/mpeg">
+    </audio>
+
+    <div style="margin-top: 26px; color: #ffd6e7; font-size: 0.95rem; line-height: 1.7;">
+      Escaneie o QR Code e abra nossa página ❤️
+    </div>
+
+    <img
+      src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=https://SEU-LINK-AQUI.com"
+      alt="QR Code"
+      style="margin-top:16px; border-radius:18px; background:white; padding:10px;"
+    />
+
+    <footer>
+      Feito com carinho, do meu jeito, para você.
+      <br /><br />
+      Música sugerida: <strong>Until I Found You - Stephen Sanchez</strong>
+      <br /><br />
+      <span style="font-size:0.8rem; opacity:0.7;">
+        Dica: coloque sua música favorita com o nome <strong>musica.mp3</strong>
+        na mesma pasta do projeto.
+      </span>
+    </footer>
+  </main>
+
+  <script>
+    const heartsContainer = document.getElementById("hearts");
+
+    function criarCoracao() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "♥";
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.fontSize = Math.random() * 18 + 12 + "px";
+      heart.style.animationDuration = Math.random() * 5 + 5 + "s";
+      heart.style.opacity = Math.random() * 0.5 + 0.25;
+      heartsContainer.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 10000);
+    }
+
+    setInterval(criarCoracao, 350);
+
+    function iniciarExperiencia() {
+      const message = document.getElementById("message");
+      const music = document.getElementById("bg-music");
+
+      message.style.display = "block";
+      message.scrollIntoView({ behavior: "smooth" });
+
+      music.play();
+    });
+    }
+
+    const inicio = new Date("2025-05-07T00:00:00");
+    const hoje = new Date();
+
+    const diferenca = hoje - inicio;
+    const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+
+    document.getElementById("dias").innerText = dias;
+
+    const reveals = document.querySelectorAll('.reveal');
+
+    function revelarMensagens() {
+      reveals.forEach((item) => {
+        const top = item.getBoundingClientRect().top;
+
+        if (top < window.innerHeight - 100) {
+          item.classList.add('show');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', revelarMensagens);
+    revelarMensagens();
+  </script>
+</body>
+</html>
